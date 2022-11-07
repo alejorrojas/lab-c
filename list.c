@@ -25,7 +25,6 @@ void GenerateList(int amount){
         randSurname = rand() % 9;
         randYear = rand() % 23;
         randProyect = rand() % 4;
-        printf("%i\n", 2000+randYear);
 
         //creamos el nombre completo concatenando dos strings
         strcpy(fullname, names[randName]);
@@ -52,7 +51,7 @@ void PrintList(){
 void InicializarMatriz(){
     for (i = 0; i < 5; i++)
     {
-        for (int j = 0; i < 4; i++)
+        for (int j = 0; j < 4; j++)
         {
             matriz[i][j] = 0;
         }
@@ -92,13 +91,47 @@ int CalcRow(int year){
     }
 }
 
+void PrintMatriz(){
+    printf("Web   Blockchain   IA   Cloud \n");
+     for (i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            printf("%i   ",matriz[i][j]);
+        }
+        printf("\n");
+    }
+    
+}
 
 int main(){
     
     amount = 50;
     GenerateList(amount);
-    PrintList();
     InicializarMatriz();
+
+    for ( i = 0; i < amount; i++)
+    {
+        int colum = CalcColum(list[i].proyect);
+        int row = CalcRow(list[i].hireYear);
+        printf(" row: %i\n ", row);
+        printf(" colum: %i\n ", colum);
+
+        //acumulo en la poscion indicada
+        matriz[row][colum] =  matriz[row][colum] + 1;
+        printf("matriz: %i\n", matriz[row][colum]);
+
+        //acumulo al total por proyecto
+        matriz[4][colum] = matriz[4][colum] + 1;
+
+        //acumulo al total por antiguedad
+        matriz[row][5] = matriz[4][colum] + 1;
+        
+    }
+
+    PrintMatriz();
+    
+
     
     return 0; 
 }
