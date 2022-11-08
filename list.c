@@ -60,18 +60,18 @@ void InicializarMatriz(){
 }
 
 //funcion para calcular columna en base al proyecto
-int CalcColum(char proyect[]){
+int CalcColum(char proyect[11]){
     if(strcmp(proyect, "Web") == 0){
-        return 1;
+        return 0;
     }
     else if(strcmp(proyect, "Blockchain") == 0){
-        return 2;
+        return 1;
     }
     else if(strcmp(proyect, "IA") == 0){
-        return 3;
+        return 2;
     }
     else if(strcmp(proyect, "Cloud") == 0){
-        return 4;
+        return 3;
     }
 }
 
@@ -79,25 +79,25 @@ int CalcColum(char proyect[]){
 int CalcRow(int year){
     if(year > 2020){
         //de 0 a 2 años
-        return 1;
+        return 0;
     }
     else if(year > 2017){
         //de 3 a 5 años
-        return 2;
+        return 1;
     }
     else{
         //mas de 5 años
-        return 3;
+        return 2;
     }
 }
 
 void PrintMatriz(){
-    printf("Web   Blockchain   IA   Cloud \n");
-     for (i = 0; i < 5; i++)
-    {
-        for (int j = 0; j < 4; j++)
+    printf("Web  Bl  IA  Cl  Total \n");
+     for (i = 0; i < 4; i++)
+    {   
+        for (int j = 0; j < 5; j++)
         {
-            printf("%i   ",matriz[i][j]);
+            printf("%i    ",matriz[i][j]);
         }
         printf("\n");
     }
@@ -114,20 +114,21 @@ int main(){
     {
         int colum = CalcColum(list[i].proyect);
         int row = CalcRow(list[i].hireYear);
-        printf(" row: %i\n ", row);
-        printf(" colum: %i\n ", colum);
 
         //acumulo en la poscion indicada
         matriz[row][colum] =  matriz[row][colum] + 1;
-        printf("matriz: %i\n", matriz[row][colum]);
 
         //acumulo al total por proyecto
-        matriz[4][colum] = matriz[4][colum] + 1;
+        matriz[3][colum] = matriz[3][colum] + 1;
 
         //acumulo al total por antiguedad
-        matriz[row][5] = matriz[4][colum] + 1;
+        matriz[row][4] = matriz[row][4] + 1;
+
+        matriz[3][4] += 1;
         
     }
+
+
 
     PrintMatriz();
     
