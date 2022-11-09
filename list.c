@@ -2,6 +2,15 @@
 #include <string.h>
 #include <stdlib.h>
 
+/* 
+-----CONSIGNAS-----------
+1- Cuantos empleados de más de 5 años tiene la empresa
+2- Cuantos empleados hay trabajando en Blockchain ahora mismo 
+3- Proyecto con más empleados
+4- Empleados con mayor antigüedad y en que proyecto trabajan
+*/
+
+
 const char proyects[4][11] = {"Web", "Blockchain", "IA", "Cloud"};
 const char names[10][11] = {"Mark ", "Jeff ", "Elon ", "Freddy ", "Guillermo ", "George ", "Gonzalo ", "Steve ", "Tim "};
 const char surnames[10][11] = {"Zuck", "Bezos", "Musk", "Mercury", "Rauch", "Lucas", "Pozzo", "Jobs", "Cook"};
@@ -12,6 +21,7 @@ struct Employee
     char proyect[50];
 };
 struct Employee list[50];
+struct Employee oldest;
 int matriz[4][5];
 int randName, randYear, randProyect, randSurname, i, amount;
 char fullname[11];
@@ -36,8 +46,15 @@ void GenerateList(int amount){
         strcpy(list[i].proyect, proyects[randProyect]);
     }
 
+    //Generamos manualmente un empleado muy antiguo para probar la busqueda
+    list[5].hireYear = 1999;
+    strcpy(list[5].name, "Larry Page");
+    strcpy(list[5].proyect, "Web");
+
+
 }
 
+//funcion para imprimir la lista aleatoria de empleados
 void PrintList(){
       for (i = 0; i < amount; i++)
     {
@@ -91,6 +108,7 @@ int CalcRow(int year){
     }
 }
 
+//imprimir matriz
 void PrintMatriz(){
     printf("Web  Bl  IA  Cl  Total \n");
      for (i = 0; i < 4; i++)
@@ -104,16 +122,59 @@ void PrintMatriz(){
     
 }
 
+void BusquedaProyecto(){
+    int columProyecto;
+    int maxEmpleados = 0;
+    char proyecto[11];
+
+    for ( i = 0; i < 4; i++)
+    {
+        if(matriz[3][i] > maxEmpleados){
+            columProyecto = i;
+            maxEmpleados = matriz[3][i];
+        }
+    }
+    
+    //en base a la columna determino a que proyecto hace referencia
+    if(columProyecto == 0){
+        strcpy(proyecto,"Web");
+    }
+    else if(columProyecto == 1){
+        strcpy(proyecto,"Blockchain");
+
+    }
+    else if(columProyecto == 2){
+        strcpy(proyecto,"IA");
+
+    }
+    else if(columProyecto == 3){
+        strcpy(proyecto,"Cloud");
+    }
+     printf("Proyecto con mas empleados trabajando: %s ",   proyecto);
+     printf("con %i ", maxEmpleados);
+     printf("empleados\n");
+}
+
 int main(){
     
     amount = 50;
     GenerateList(amount);
     InicializarMatriz();
 
+    //asumimos que el empleado mas antiguo es el primero
+    oldest = list[0];
     for ( i = 0; i < amount; i++)
     {
         int colum = CalcColum(list[i].proyect);
         int row = CalcRow(list[i].hireYear);
+
+        if (oldest.hireYear > list[i].hireYear)
+        {   
+            //si encontramos un empleado con un año de contratacion anterior lo guardamos
+            oldest = list[i];
+        }
+        
+
 
         //acumulo en la poscion indicada
         matriz[row][colum] =  matriz[row][colum] + 1;
@@ -128,11 +189,21 @@ int main(){
         
     }
 
-
-
     PrintMatriz();
-    
 
+    printf("------------------------------\n");
+    printf("Cantidad de empleados con mas de 5 anios en la empresa: %i\n", matriz[2][4]);
+    printf("Cantidad de empleados trabajando en la Blockchain: %i\n", matriz[3][1]);
     
+    BusquedaProyecto();
+
+    printf("Empleado con mayor antiguedad en la empresa: %s .", oldest.name);
+    printf(" Actualmente trabajando en el proyecto: %s .", oldest.proyect);
+    printf(" Desde: %i ", oldest.hireYear);
+
     return 0; 
 }
+
+
+
+
