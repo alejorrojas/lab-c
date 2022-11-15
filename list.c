@@ -4,71 +4,65 @@
 
 /* 
 -----CONSIGNAS-----------
-1- Cuantos empleados de más de 5 años tiene la empresa
-2- Cuantos empleados hay trabajando en Blockchain ahora mismo 
-3- Proyecto con más empleados
-4- Empleados con mayor antigüedad y en que proyecto trabajan
+1- Que tipo de material se recicla mas
+2- Empresa que mas recicla 
+3- Kilos reciclados en total por las empresas
+4- Empresa que no desecho residuos generales -> 100% reciclaje
 */
 
 
-const char proyects[4][11] = {"Web", "Blockchain", "IA", "Cloud"};
-const char names[10][11] = {"Mark ", "Jeff ", "Elon ", "Freddy ", "Guillermo ", "George ", "Gonzalo ", "Steve ", "Tim "};
-const char surnames[10][11] = {"Zuck", "Bezos", "Musk", "Mercury", "Rauch", "Lucas", "Pozzo", "Jobs", "Cook"};
-struct Employee
+
+
+const char clasificacion[5][11] = {"generales", "inorganico", "organicos"};
+const char names[10][25] = {"MERCADO LIBRE", "ARCOR", "TOYOTA", "GOOGLE", "QUILMES", "NATURA", "UNILEVER", "SANTANDER", "BBVA", "FORD"};
+struct Company
 {
     char name[50];
-    int hireYear;
-    char proyect[50];
+    int generales;
+    int inorganico;
+    int organicos;
 };
-struct Employee list[50];
-struct Employee oldest;
-int matriz[4][5];
-int randName, randYear, randProyect, randSurname, i, amount;
-char fullname[11];
+struct Company lista[50];
+int matriz[4][11];
+int i;
 
-//funcion para generar una lista aleatoria de empleados
-void GenerateList(int amount){
-    for (i = 0; i < amount; i++)
+
+//funcion para generar una lista de empresas con kilos reciclados aleatorios
+void Generarlista(){
+    for (i = 0; i < 10; i++)
     {
-        //generamos numeros aleatorios para combinaciones aleatorias de empleados
-        randName = rand() % 9;
-        randSurname = rand() % 9;
-        randYear = rand() % 23;
-        randProyect = rand() % 4;
+        //generamos numeros aleatorios para cantidades aleatorias de reciclaje
+        int randGenerales = rand() % 10;
+        int randInorganicos = rand() % 10;
+        int randOrganicos = rand() % 10;
 
-        //creamos el nombre completo concatenando dos strings
-        strcpy(fullname, names[randName]);
-        strcat(fullname, surnames[randSurname]);
+      
+     
 
-        //escribimos en la lista
-        list[i].hireYear = 2000+randYear;
-        strcpy(list[i].name, fullname);
-        strcpy(list[i].proyect, proyects[randProyect]);
+        strcpy(lista[i].name, names[i]);
+        lista[i].generales = randGenerales;
+        lista[i].inorganico = randInorganicos;
+        lista[i].organicos = randOrganicos;
     }
-
-    //Generamos manualmente un empleado muy antiguo para probar la busqueda
-    list[5].hireYear = 1999;
-    strcpy(list[5].name, "Larry Page");
-    strcpy(list[5].proyect, "Web");
-
 
 }
 
-//funcion para imprimir la lista aleatoria de empleados
-void PrintList(){
-      for (i = 0; i < amount; i++)
+//funcion para imprimir la lista de empresas
+void Printlista(){
+      for ( i = 0; i < 10; i++)
     {
         printf("--------------------------\n");
-        printf("Employee name: %s\n", list[i].name);
-        printf("Proyect: %s\n", list[i].proyect);
-        printf("Hire year: %i\n", list[i].hireYear);
+        printf("Empresa: %s\n", lista[i].name);
+        printf("Cantidad de desehcos generales: %i\n", lista[i].generales);
+        printf("Cantidad de desehcos inorganicos: %i\n", lista[i].inorganico);
+        printf("Cantidad de desehcos organicos: %i\n", lista[i].organicos);
     }
 }
 
 void InicializarMatriz(){
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < 4; i++)
     {
-        for (int j = 0; j < 4; j++)
+        for (int j = 0; j < 11; j++)
         {
             matriz[i][j] = 0;
         }
@@ -76,130 +70,222 @@ void InicializarMatriz(){
     
 }
 
-//funcion para calcular columna en base al proyecto
-int CalcColum(char proyect[11]){
-    if(strcmp(proyect, "Web") == 0){
+//funcion para calcular columna en base a la empresa
+int CalcColum(char empresa[11]){
+    if(strcmp(empresa, "MERCADO LIBRE") == 0){
         return 0;
     }
-    else if(strcmp(proyect, "Blockchain") == 0){
+    else if(strcmp(empresa, "ARCOR") == 0){
         return 1;
     }
-    else if(strcmp(proyect, "IA") == 0){
+    else if(strcmp(empresa, "TOYOTA") == 0){
         return 2;
     }
-    else if(strcmp(proyect, "Cloud") == 0){
+    else if(strcmp(empresa, "GOOGLE") == 0){
         return 3;
+    }
+    else if(strcmp(empresa, "QUILMES") == 0){
+        return 4;
+    }
+    else if(strcmp(empresa, "NATURA") == 0){
+        return 5;
+    }
+    else if(strcmp(empresa, "UNILEVER") == 0){
+        return 6;
+    }
+    else if(strcmp(empresa, "SANTANDER") == 0){
+        return 7;
+    }
+    else if(strcmp(empresa, "BBVA") == 0){
+        return 8;
+    }
+    else if(strcmp(empresa, "FORD") == 0){
+        return 9;
     }
 }
 
-//funcion para calcular fila en base a la antiguedad
-int CalcRow(int year){
-    if(year > 2020){
-        //de 0 a 2 años
-        return 0;
+
+void BusquedaMaterial(){
+    int filaMaterial;
+    int maxCantidad = 0;
+    char material[15];
+
+    for ( i = 0; i < 3; i++)
+    {   
+        if(matriz[i][10] > maxCantidad){
+            filaMaterial = i;
+            maxCantidad = matriz[i][10];
+        }
     }
-    else if(year > 2017){
-        //de 3 a 5 años
-        return 1;
+    
+    //en base a la fila determino a que tipo hace referencia
+    if(filaMaterial == 0){
+         strcpy(material,"general");
     }
-    else{
-        //mas de 5 años
-        return 2;
+    else if(filaMaterial == 1){
+        strcpy(material,"inorganico");
+
     }
+    else if(filaMaterial == 2){
+        strcpy(material,"organico");
+    }
+    printf("El tipo de material que mas se reciclo es: %s", material);
+    printf(" con: %i", maxCantidad);
+    printf(" de miles kilos\n");
 }
+
+void BusquedaEmpresa(){
+    int colEmpresa;
+    int maxCantidad = 0;
+    char empresa[15];
+
+    for ( int j = 0; j < 10; j++)
+    {   
+        if(matriz[3][j] > maxCantidad){
+            colEmpresa = j;
+            maxCantidad = matriz[3][j];
+        }
+    }
+    
+    //en base a la columna determino a que empresa hace referencia
+    if(colEmpresa == 0){
+         strcpy(empresa,"MERCADO LIBRE");
+    }
+    else if(colEmpresa == 1){
+        strcpy(empresa,"ARCOR");
+    }
+    else if(colEmpresa == 2){
+        strcpy(empresa,"TOYOTA");
+    }
+    else if(colEmpresa == 3){
+        strcpy(empresa,"GOOGLE");
+    }
+    else if(colEmpresa == 4){
+        strcpy(empresa,"QUILMES");
+    }
+    else if(colEmpresa == 5){
+        strcpy(empresa,"NATURA");
+    }
+    else if(colEmpresa == 6){
+        strcpy(empresa,"UNILEVER");
+    }
+    else if(colEmpresa == 7){
+        strcpy(empresa,"SANTANDER");
+    }
+    else if(colEmpresa == 8){
+        strcpy(empresa,"BBVA");
+    }
+    else if(colEmpresa == 9){
+        strcpy(empresa,"FORD");
+    }
+    printf("La empresa que mas reciclo es: %s", empresa);
+    printf(" con: %i", maxCantidad);
+    printf(" mil kilos\n");
+}
+
+void BusquedaGenerales(){
+    int colEmpresa;
+    int maxCantidad = 0;
+    char empresa[15];
+
+    for( int j = 0; j < 10; j++)
+    {   
+        if(matriz[0][j] == 0){
+            colEmpresa = j;
+        }
+    }
+    
+    //en base a la columna determino a que empresa hace referencia
+    if(colEmpresa == 0){
+         strcpy(empresa,"MERCADO LIBRE");
+    }
+    else if(colEmpresa == 1){
+        strcpy(empresa,"ARCOR");
+    }
+    else if(colEmpresa == 2){
+        strcpy(empresa,"TOYOTA");
+    }
+    else if(colEmpresa == 3){
+        strcpy(empresa,"GOOGLE");
+    }
+    else if(colEmpresa == 4){
+        strcpy(empresa,"QUILMES");
+    }
+    else if(colEmpresa == 5){
+        strcpy(empresa,"NATURA");
+    }
+    else if(colEmpresa == 6){
+        strcpy(empresa,"UNILEVER");
+    }
+    else if(colEmpresa == 7){
+        strcpy(empresa,"SANTANDER");
+    }
+    else if(colEmpresa == 8){
+        strcpy(empresa,"BBVA");
+    }
+    else if(colEmpresa == 9){
+        strcpy(empresa,"FORD");
+    }
+    printf("La empresa que no desecho residuos generales es: %s", empresa);
+}
+
 
 //imprimir matriz
 void PrintMatriz(){
-    printf("Web  Bl  IA  Cl  Total \n");
+    printf("ML AR TY GG QL NT UN ST BB FR TOTAL\n");
      for (i = 0; i < 4; i++)
     {   
-        for (int j = 0; j < 5; j++)
+        for (int j = 0; j < 11; j++)
         {
-            printf("%i    ",matriz[i][j]);
+            printf("%i| ",matriz[i][j]);
         }
         printf("\n");
     }
     
 }
 
-void BusquedaProyecto(){
-    int columProyecto;
-    int maxEmpleados = 0;
-    char proyecto[11];
-
-    for ( i = 0; i < 4; i++)
-    {
-        if(matriz[3][i] > maxEmpleados){
-            columProyecto = i;
-            maxEmpleados = matriz[3][i];
-        }
-    }
-    
-    //en base a la columna determino a que proyecto hace referencia
-    if(columProyecto == 0){
-        strcpy(proyecto,"Web");
-    }
-    else if(columProyecto == 1){
-        strcpy(proyecto,"Blockchain");
-
-    }
-    else if(columProyecto == 2){
-        strcpy(proyecto,"IA");
-
-    }
-    else if(columProyecto == 3){
-        strcpy(proyecto,"Cloud");
-    }
-     printf("Proyecto con mas empleados trabajando: %s ",   proyecto);
-     printf("con %i ", maxEmpleados);
-     printf("empleados\n");
-}
 
 int main(){
     
-    amount = 50;
-    GenerateList(amount);
+    Generarlista();
     InicializarMatriz();
+    
 
     //asumimos que el empleado mas antiguo es el primero
-    oldest = list[0];
-    for ( i = 0; i < amount; i++)
+    for (int i = 0; i < 10; i++)
     {
-        int colum = CalcColum(list[i].proyect);
-        int row = CalcRow(list[i].hireYear);
-
-        if (oldest.hireYear > list[i].hireYear)
-        {   
-            //si encontramos un empleado con un año de contratacion anterior lo guardamos
-            oldest = list[i];
-        }
-        
+        int colum = CalcColum(lista[i].name);
+        int total = lista[i].generales + lista[i].inorganico + lista[i].organicos;
 
 
         //acumulo en la poscion indicada
-        matriz[row][colum] =  matriz[row][colum] + 1;
+        matriz[0][colum] =  matriz[0][colum] + lista[i].generales;
+        matriz[1][colum] =  matriz[1][colum] + lista[i].inorganico;
+        matriz[2][colum] =  matriz[2][colum] + lista[i].organicos;
 
         //acumulo al total por proyecto
-        matriz[3][colum] = matriz[3][colum] + 1;
+        matriz[3][colum] = total;
 
         //acumulo al total por antiguedad
-        matriz[row][4] = matriz[row][4] + 1;
+        matriz[0][10] = matriz[0][10] + lista[i].generales;
+        matriz[1][10] = matriz[1][10] + lista[i].inorganico;
+        matriz[2][10] = matriz[2][10] + lista[i].organicos;
 
-        matriz[3][4] += 1;
+        
+        matriz[3][10] = matriz[3][10] + total;
         
     }
 
+
+
+
     PrintMatriz();
+    BusquedaMaterial();
+    BusquedaEmpresa();
+    printf("Cantidad de kilos reciclados por las empresas: %i\n", matriz[3][10]);
+    BusquedaGenerales();
 
-    printf("------------------------------\n");
-    printf("Cantidad de empleados con mas de 5 anios en la empresa: %i\n", matriz[2][4]);
-    printf("Cantidad de empleados trabajando en la Blockchain: %i\n", matriz[3][1]);
-    
-    BusquedaProyecto();
-
-    printf("Empleado con mayor antiguedad en la empresa: %s .", oldest.name);
-    printf(" Actualmente trabajando en el proyecto: %s .", oldest.proyect);
-    printf(" Desde: %i ", oldest.hireYear);
+ 
 
     return 0; 
 }
