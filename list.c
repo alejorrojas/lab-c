@@ -2,13 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-/* 
------CONSIGNAS-----------
-1- Que tipo de material se recicla mas
-2- Empresa que mas recicla 
-3- Kilos reciclados en total por las empresas
-4- Empresa que no desecho residuos generales -> 100% reciclaje
-*/
+
 
 
 
@@ -251,31 +245,37 @@ int main(){
     InicializarMatriz();
     
 
-    //asumimos que el empleado mas antiguo es el primero
     for (int i = 0; i < 10; i++)
-    {
-        int colum = CalcColum(lista[i].name);
+    {   
+        int colum = CalcColum(lista[i].name); //en base a la empresa determinamos su columna
         int total = lista[i].generales + lista[i].inorganico + lista[i].organicos;
 
 
-        //acumulo en la poscion indicada
+        //acumulamos en la poscion correspondiente al la empresa
         matriz[0][colum] =  matriz[0][colum] + lista[i].generales;
         matriz[1][colum] =  matriz[1][colum] + lista[i].inorganico;
         matriz[2][colum] =  matriz[2][colum] + lista[i].organicos;
 
-        //acumulo al total por proyecto
+        //acumulamos al total por empresa
         matriz[3][colum] = total;
 
-        //acumulo al total por antiguedad
+        //acumulamos en la poscion correspondiente al la tipo
         matriz[0][10] = matriz[0][10] + lista[i].generales;
         matriz[1][10] = matriz[1][10] + lista[i].inorganico;
         matriz[2][10] = matriz[2][10] + lista[i].organicos;
 
-        
+        //acumulamos al total general de kilos reciclados
         matriz[3][10] = matriz[3][10] + total;
         
     }
 
+    /* 
+    -----CONSIGNAS-----------
+    1- Que tipo de material se recicla mas
+    2- Empresa que mas recicla 
+    3- Kilos reciclados en total por las empresas
+    4- Empresa que no desecho residuos generales -> 100% reciclaje
+    */
 
 
 
